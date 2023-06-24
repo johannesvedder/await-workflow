@@ -6,14 +6,10 @@ const retryIntervalSeconds = 60 // Retry interval in seconds
 const timeoutSeconds = 600 // Timeout duration in seconds
 
 async function run(): Promise<void> {
-  console.log(`Start action`)
-
   const inputs = {
     token: core.getInput('github-token', {required: true}),
     workflowId: core.getInput('workflow-id')
   }
-
-  console.log(`Read inputs`)
 
   let octokit = github.getOctokit(inputs.token)
   let elapsedTimeSeconds = 0
@@ -40,17 +36,18 @@ async function run(): Promise<void> {
       const latestRunStatus = latestRun.status
       const latestRunConclusion = latestRun.conclusion
 
-      console.log(`Total Counts: ${totalCounts}`)
-
-      if (
-        latestRunStatus === 'completed' &&
-        latestRunConclusion === 'success'
-      ) {
-        console.log('Latest run was successful')
-        break // Exit the loop if the latest run was successful
+      if (latestRunStatus === 'completed') {
+        if (latestRunConclusion === 'success') {
+          console.log('Latest run was successful')
+          break // Do not wait if the latest run was successful
+        } else if (latestRunConclusion === 'failure') {
+          core.setFailed('Latest run was not successful')
+          process.exit(1)
+        } else {
+          // todo check with input parameter which status cases should lead to a failed state
+        }
       } else {
-        core.setFailed('Latest run was not successful')
-        process.exit(1)
+        console.log(`Wait because status is ${latestRunStatus}`)
       }
     } else {
       console.log('No workflow runs found')
