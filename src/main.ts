@@ -37,19 +37,27 @@ async function run(): Promise<void> {
 
       if (latestRunStatus === 'completed') {
         if (latestRunConclusion === 'success') {
-          core.debug('Latest run was successful')
+          core.debug('Latest run of the given workflow was successful')
           break
         } else if (latestRunConclusion === 'failure') {
-          core.setFailed('Latest run was not successful')
+          core.setFailed('Latest run of the given workflow was a failure')
           process.exit(1)
         } else {
-          // todo check with input parameter which status cases should lead to a failed state
+          // todo check with another input parameter which status cases should lead to a failed state
+          // see https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#get-a-workflow-run
+          // and https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-checks?apiVersion=2022-11-28
+
+          // For now just fail
+          core.setFailed(
+            `Latest run of the given workflow was not successful (status: ${latestRunStatus})`
+          )
+          process.exit(1)
         }
       } else {
         core.debug(`Wait because status is ${latestRunStatus}`)
       }
     } else {
-      core.debug('No workflow runs found')
+      core.debug('No runs of the given workflow found')
       break
     }
 
@@ -59,11 +67,11 @@ async function run(): Promise<void> {
       core.debug(`Retrying in ${inputs.retryIntervalSeconds} seconds...`)
       await sleep(inputs.retryIntervalSeconds)
     } else {
-      core.setFailed('await-workflow timed out')
+      core.setFailed('Timed out')
       process.exit(1)
     }
   }
-  core.debug('Finished waiting')
+  core.debug('Action completed')
 }
 
 export async function sleep(seconds: number): Promise<void> {
