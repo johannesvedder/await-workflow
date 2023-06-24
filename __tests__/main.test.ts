@@ -4,7 +4,7 @@ import * as cp from 'child_process'
 import * as path from 'path'
 import {expect, test} from '@jest/globals'
 
-test('throws invalid number', async () => {
+/*test('throws invalid number', async () => {
   const input = parseInt('foo', 10)
   await expect(wait(input)).rejects.toThrow('milliseconds not a number')
 })
@@ -26,4 +26,4 @@ test('test runs', () => {
     env: process.env
   }
   console.log(cp.execFileSync(np, [ip], options).toString())
-})
+})*/

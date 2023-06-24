@@ -1,11 +1,16 @@
-name: 'Your name here'
+name: 'Await Workflow'
 description: 'Provide a description here'
-author: 'Your name or organization here'
+author: 'Johannes Vedder'
+
 inputs:
-  milliseconds: # change this
+  github-token:
+    description: The GitHub token used to post comments on pull requests
+    default: ${{ github.token }}
+
+  workflow-id:
+    description: The workflow id or filename of the workflow to wait on
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
