@@ -1,6 +1,6 @@
-name: 'Await Workflow'
-description: 'Await workflow description
-author: 'Johannes Vedder'
+name: Await Workflow
+description: Await workflow description
+author: Johannes Vedder
 
 inputs:
   github-token:
