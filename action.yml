@@ -3,13 +3,25 @@ description: Await workflow description
 author: Johannes Vedder
 
 inputs:
-  github-token:
-    description: The GitHub token used to post comments on pull requests
-    default: ${{ github.token }}
-
   workflow-id:
     description: The workflow id or filename of the workflow to wait on
     required: true
+
+  retryIntervalSeconds:
+    description: Retry interval in seconds
+    default: '60'
+
+  timeoutSeconds:
+    description: Timeout duration in seconds
+    default: '600'
+
+  initialWaitSeconds:
+    description: Wait time until GitHub workflows are initialized in seconds
+    default: '10'
+
+  github-token:
+    description: The GitHub token used to post comments on pull requests
+    default: ${{ github.token }}
 
 runs:
   using: 'node16'

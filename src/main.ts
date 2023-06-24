@@ -1,21 +1,20 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-const initialWaitTime = 10 // Wait time until GitHub workflows are initialized in seconds
-const retryIntervalSeconds = 60 // Retry interval in seconds
-const timeoutSeconds = 600 // Timeout duration in seconds
-
 async function run(): Promise<void> {
   const inputs = {
-    token: core.getInput('github-token', {required: true}),
-    workflowId: core.getInput('workflow-id')
+    workflowId: core.getInput('workflow-id'),
+    retryIntervalSeconds: Number(core.getInput('retryIntervalSeconds')),
+    timeoutSeconds: Number(core.getInput('timeoutSeconds')),
+    initialWaitSeconds: Number(core.getInput('initialWaitSeconds')),
+    token: core.getInput('github-token', {required: true})
   }
 
   let octokit = github.getOctokit(inputs.token)
   let elapsedTimeSeconds = 0
-  await sleep(initialWaitTime)
+  await sleep(inputs.initialWaitSeconds)
 
-  while (elapsedTimeSeconds < timeoutSeconds) {
+  while (elapsedTimeSeconds < inputs.timeoutSeconds) {
     const response = await octokit.request(
       'GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs',
       {
@@ -38,8 +37,8 @@ async function run(): Promise<void> {
 
       if (latestRunStatus === 'completed') {
         if (latestRunConclusion === 'success') {
-          console.log('Latest run was successful')
-          break // Do not wait if the latest run was successful
+          core.debug('Latest run was successful')
+          break
         } else if (latestRunConclusion === 'failure') {
           core.setFailed('Latest run was not successful')
           process.exit(1)
@@ -47,31 +46,34 @@ async function run(): Promise<void> {
           // todo check with input parameter which status cases should lead to a failed state
         }
       } else {
-        console.log(`Wait because status is ${latestRunStatus}`)
+        core.debug(`Wait because status is ${latestRunStatus}`)
       }
     } else {
-      console.log('No workflow runs found')
-      break // Do not wait
+      core.debug('No workflow runs found')
+      break
     }
 
-    elapsedTimeSeconds += retryIntervalSeconds
+    elapsedTimeSeconds += inputs.retryIntervalSeconds
 
-    if (elapsedTimeSeconds < timeoutSeconds) {
-      console.log(`Retrying in ${retryIntervalSeconds} seconds...`)
-      await sleep(retryIntervalSeconds)
+    if (elapsedTimeSeconds < inputs.timeoutSeconds) {
+      core.debug(`Retrying in ${inputs.retryIntervalSeconds} seconds...`)
+      await sleep(inputs.retryIntervalSeconds)
     } else {
       core.setFailed('await-workflow timed out')
       process.exit(1)
     }
   }
-  // core.debug(`Workflow${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-  // core.setOutput('time', new Date().toTimeString())
-  console.log('Finished waiting')
+  core.debug('Finished waiting')
 }
 
-function sleep(seconds: number): Promise<void> {
+export async function sleep(seconds: number): Promise<void> {
   const milliseconds = seconds * 1000
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
+  return new Promise(resolve => {
+    if (isNaN(milliseconds)) {
+      throw new Error('milliseconds not a number')
+    }
+    setTimeout(resolve, milliseconds)
+  })
 }
 
 run().catch(error => {
