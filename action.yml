@@ -1,11 +1,14 @@
 name: Await Workflow
-description: Await workflow description
+description: Wait for a specific workflow to complete before proceeding with the next steps in your workflow.
 author: Johannes Vedder
 
 inputs:
-  workflow-id:
+  workflowId:
     description: The workflow id or filename of the workflow to wait on
     required: true
+
+  repository:
+    description: The repository in the format 'owner/repo' to fetch the workflow runs (default is the current repository)
 
   retryIntervalSeconds:
     description: Retry interval in seconds
@@ -18,6 +21,10 @@ inputs:
   initialWaitSeconds:
     description: Wait time until GitHub workflows are initialized in seconds
     default: '10'
+
+  successStatuses:
+    description: Comma-separated list of status values that indicate a successful workflow run
+    default: 'success'
 
   github-token:
     description: The GitHub token used to post comments on pull requests

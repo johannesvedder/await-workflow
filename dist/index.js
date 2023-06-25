@@ -45,41 +45,49 @@ const github = __importStar(__nccwpck_require__(5438));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const inputs = {
-            workflowId: core.getInput('workflow-id'),
+            workflowId: core.getInput('workflowId'),
+            repository: core.getInput('repository') ||
+                `${github.context.repo.owner}/${github.context.repo.repo}`,
             retryIntervalSeconds: Number(core.getInput('retryIntervalSeconds')),
             timeoutSeconds: Number(core.getInput('timeoutSeconds')),
             initialWaitSeconds: Number(core.getInput('initialWaitSeconds')),
+            successStatuses: core
+                .getInput('successStatuses')
+                .split(',')
+                .map(status => status.trim()),
             token: core.getInput('github-token', { required: true })
         };
-        let octokit = github.getOctokit(inputs.token);
+        const octokit = github.getOctokit(inputs.token);
+        const [owner, repo] = inputs.repository.split('/');
         let elapsedTimeSeconds = 0;
         yield sleep(inputs.initialWaitSeconds);
         while (elapsedTimeSeconds < inputs.timeoutSeconds) {
             const response = yield octokit.request('GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs', {
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
+                owner,
+                repo,
                 workflow_id: inputs.workflowId,
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             });
-            const workflowRuns = response.data.workflow_runs;
+            const latestWorkflowRun = response.data.workflow_runs[0];
+            const latestRunStatus = latestWorkflowRun.status;
+            const latestRunConclusion = latestWorkflowRun.conclusion;
             const totalCounts = response.data.total_count;
             if (totalCounts > 0) {
-                const latestRun = workflowRuns[0];
-                const latestRunStatus = latestRun.status;
-                const latestRunConclusion = latestRun.conclusion;
                 if (latestRunStatus === 'completed') {
-                    if (latestRunConclusion === 'success') {
-                        core.debug('Latest run was successful');
+                    if (latestRunConclusion &&
+                        inputs.successStatuses.includes(latestRunConclusion)) {
+                        core.debug(`Latest run of the given workflow allows continuation [${latestRunConclusion}]`);
                         break;
                     }
                     else if (latestRunConclusion === 'failure') {
-                        core.setFailed('Latest run was not successful');
+                        core.setFailed('Latest run of the given workflow was a failure');
                         process.exit(1);
                     }
                     else {
-                        // todo check with input parameter which status cases should lead to a failed state
+                        core.setFailed(`Latest run of the given workflow was not successful [${latestRunStatus}]`);
+                        process.exit(1);
                     }
                 }
                 else {
@@ -87,7 +95,7 @@ function run() {
                 }
             }
             else {
-                core.debug('No workflow runs found');
+                core.debug('No runs of the given workflow found');
                 break;
             }
             elapsedTimeSeconds += inputs.retryIntervalSeconds;
@@ -96,11 +104,11 @@ function run() {
                 yield sleep(inputs.retryIntervalSeconds);
             }
             else {
-                core.setFailed('await-workflow timed out');
+                core.setFailed('Timed out');
                 process.exit(1);
             }
         }
-        core.debug('Finished waiting');
+        core.debug('Action completed');
     });
 }
 function sleep(seconds) {
@@ -115,10 +123,17 @@ function sleep(seconds) {
     });
 }
 exports.sleep = sleep;
-run().catch(error => {
-    if (error instanceof Error)
-        core.setFailed(error.message);
-});
+;
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield run();
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        }
+    }
+}))();
 
 
 /***/ }),
