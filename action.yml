@@ -1,6 +1,9 @@
 name: Await Workflow
 description: Wait for a specific workflow to complete before proceeding with the next steps in your workflow.
 author: Johannes Vedder
+branding:
+  icon: 'pause'
+  color: 'yellow'
 
 inputs:
   workflowId:
