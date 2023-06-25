@@ -36,6 +36,9 @@ jobs:
           npm run build
           npm run package
 
+      - name: Correct vercel/ncc crlf output
+        run: sed -i 's/\x0D$//' ./dist/index.js
+
       - name: Compare the expected and actual dist/ directories
         run: |
           if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
