@@ -1,4 +1,8 @@
-## Update deps
+# Repository Specific Additions
+
+Some repository specific workflows.
+
+## Update Dependencies
 
 ```
 npm i -g npm-check-updates
@@ -40,7 +44,7 @@ follow the below instructions:
 
 > [!IMPORTANT]
 >
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
+> Make sure to remove or update the [`CODEOWNERS`] file! For
 > details on how to use this file, see
 > [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
 
@@ -96,7 +100,7 @@ inputs, and outputs for your action.
 
 ## Update the Action Code
 
-The [`src/`](./src/) directory is the heart of your action! This contains the
+The [`src/`](./src) directory is the heart of your action! This contains the
 source code that will be run when your action is invoked. You can replace the
 contents of this directory with your own code.
 
