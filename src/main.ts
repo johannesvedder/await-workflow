@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-async function run(): Promise<void> {
+async function startWorkflow(): Promise<void> {
   const inputs = {
     workflowId: core.getInput('workflowId'),
     repository:
@@ -90,12 +90,11 @@ export async function sleep(seconds: number): Promise<void> {
   })
 }
 
-;(async () => {
+export async function run(): Promise<void> {
   try {
-    await run()
+    await startWorkflow()
   } catch (error) {
-    if (error instanceof Error) {
-      core.setFailed(error.message)
-    }
+    // Fail the workflow run if an error occurs
+    if (error instanceof Error) core.setFailed(error.message)
   }
-})()
+}
