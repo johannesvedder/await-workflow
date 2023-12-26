@@ -1,3 +1,17 @@
+## Update deps
+
+```
+npm i -g npm-check-updates
+ncu -u
+npm install
+```
+
+## Release
+
+`./script/release`
+
+---
+
 <p align="center">
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
 </p>
