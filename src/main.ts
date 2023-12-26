@@ -14,7 +14,7 @@ async function run(): Promise<void> {
       .getInput('successStatuses')
       .split(',')
       .map(status => status.trim()),
-    token: core.getInput('github-token', {required: true})
+    token: core.getInput('github-token', { required: true })
   }
   const octokit = github.getOctokit(inputs.token)
   const [owner, repo] = inputs.repository.split('/')
