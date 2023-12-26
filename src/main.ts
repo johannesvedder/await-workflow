@@ -34,41 +34,48 @@ async function run(): Promise<void> {
       }
     )
 
-  const latestWorkflowRun = response.data.workflow_runs?.[0];
-  const totalCounts = response.data.total_count;
+    const latestWorkflowRun = response.data.workflow_runs?.[0]
+    const totalCounts = response.data.total_count
 
-  if (totalCounts === 0) {
-      core.debug('No runs of the given workflow found');
-      break;
-  }
+    if (totalCounts === 0) {
+      core.debug('No runs of the given workflow found')
+      break
+    }
 
-  const latestRunStatus = latestWorkflowRun?.status;
-  const latestRunConclusion = latestWorkflowRun?.conclusion;
+    const latestRunStatus = latestWorkflowRun?.status
+    const latestRunConclusion = latestWorkflowRun?.conclusion
 
-  if (latestRunStatus === 'completed') {
-      if (latestRunConclusion && inputs.successStatuses.includes(latestRunConclusion)) {
-          core.debug(`Latest run of the given workflow allows continuation [${latestRunConclusion}]`);
-          break;
+    if (latestRunStatus === 'completed') {
+      if (
+        latestRunConclusion &&
+        inputs.successStatuses.includes(latestRunConclusion)
+      ) {
+        core.debug(
+          `Latest run of the given workflow allows continuation [${latestRunConclusion}]`
+        )
+        break
       } else if (latestRunConclusion === 'failure') {
-          core.setFailed('Latest run of the given workflow was a failure');
-          process.exit(1);
+        core.setFailed('Latest run of the given workflow was a failure')
+        process.exit(1)
       } else {
-          core.setFailed(`Latest run of the given workflow was not successful [${latestRunStatus}]`);
-          process.exit(1);
+        core.setFailed(
+          `Latest run of the given workflow was not successful [${latestRunStatus}]`
+        )
+        process.exit(1)
       }
-  } else {
-      core.debug(`Wait because status is ${latestRunStatus}`);
-  }
+    } else {
+      core.debug(`Wait because status is ${latestRunStatus}`)
+    }
 
+    elapsedTimeSeconds += inputs.retryIntervalSeconds
 
-  elapsedTimeSeconds += inputs.retryIntervalSeconds
-
-  if (elapsedTimeSeconds < inputs.timeoutSeconds) {
-    core.debug(`Retrying in ${inputs.retryIntervalSeconds} seconds...`)
-    await sleep(inputs.retryIntervalSeconds)
-  } else {
-    core.setFailed('Timed out')
-    process.exit(1)
+    if (elapsedTimeSeconds < inputs.timeoutSeconds) {
+      core.debug(`Retrying in ${inputs.retryIntervalSeconds} seconds...`)
+      await sleep(inputs.retryIntervalSeconds)
+    } else {
+      core.setFailed('Timed out')
+      process.exit(1)
+    }
   }
   core.debug('Action completed')
 }
