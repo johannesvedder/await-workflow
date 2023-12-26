@@ -1,22 +1,24 @@
-# Repository Specific Additions
+# CONTRIBUTING
+
+## Repository Specific Additions
 
 Some repository specific workflows.
 
-## Update Dependencies
+### Update Dependencies
 
-```
+```bash
 npm i -g npm-check-updates
 ncu -u
 npm install
 ```
 
-## Create Release
+### Create Release
 
 Run `./script/release`
 
 ---
 
-# Create a GitHub Action Using TypeScript
+## Create a GitHub Action Using TypeScript (TEMPLATE REPOSITORY)
 
 [![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
 ![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
