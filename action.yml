@@ -1,5 +1,7 @@
 name: 'Await Workflow'
-description: 'Wait for a specific workflow to complete before proceeding with the next steps in your workflow.'
+description:
+  'Wait for a specific workflow to complete before proceeding with the next
+  steps in your workflow.'
 author: 'Johannes Vedder'
 branding:
   icon: 'pause'
@@ -11,7 +13,9 @@ inputs:
     required: true
 
   repository:
-    description: 'The repository in the format 'owner/repo' to fetch the workflow runs (default is the current repository)'
+    description:
+      'The repository in the format owner/repo to fetch the workflow runs
+      (default is the current repository)'
 
   retryIntervalSeconds:
     description: 'Retry interval in seconds'
@@ -26,7 +30,9 @@ inputs:
     default: '10'
 
   successStatuses:
-    description: 'Comma-separated list of status values that indicate a successful workflow run'
+    description:
+      'Comma-separated list of status values that indicate a successful workflow
+      run'
     default: 'success'
 
   github-token:
