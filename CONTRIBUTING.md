@@ -7,6 +7,13 @@ Some repository specific workflows.
 ### Update Dependencies
 
 ```bash
+npm update
+npm update --save
+```
+
+#### Optimistic update:
+
+```bash
 npm i -g npm-check-updates
 ncu -u
 npm install
