@@ -1,4 +1,4 @@
-/******/ (() => { // webpackBootstrap
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 7351:
@@ -31209,7 +31209,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
  */
 const main_1 = __nccwpck_require__(399);
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
-// noinspection JSIgnoredPromiseFromCall
 (0, main_1.run)();
 
 })();
@@ -31217,3 +31216,4 @@ const main_1 = __nccwpck_require__(399);
 module.exports = __webpack_exports__;
 /******/ })()
 ;
+//# sourceMappingURL=index.js.map
