@@ -1,38 +1,38 @@
-name: Await Workflow
-description: Wait for a specific workflow to complete before proceeding with the next steps in your workflow.
-author: Johannes Vedder
+name: 'Await Workflow'
+description: 'Wait for a specific workflow to complete before proceeding with the next steps in your workflow.'
+author: 'Johannes Vedder'
 branding:
   icon: 'pause'
   color: 'yellow'
 
 inputs:
   workflowId:
-    description: The workflow id or filename of the workflow to wait on
+    description: 'The workflow id or filename of the workflow to wait on'
     required: true
 
   repository:
-    description: The repository in the format 'owner/repo' to fetch the workflow runs (default is the current repository)
+    description: 'The repository in the format 'owner/repo' to fetch the workflow runs (default is the current repository)'
 
   retryIntervalSeconds:
-    description: Retry interval in seconds
+    description: 'Retry interval in seconds'
     default: '60'
 
   timeoutSeconds:
-    description: Timeout duration in seconds
+    description: 'Timeout duration in seconds'
     default: '600'
 
   initialWaitSeconds:
-    description: Wait time until GitHub workflows are initialized in seconds
+    description: 'Wait time until GitHub workflows are initialized in seconds'
     default: '10'
 
   successStatuses:
-    description: Comma-separated list of status values that indicate a successful workflow run
+    description: 'Comma-separated list of status values that indicate a successful workflow run'
     default: 'success'
 
   github-token:
-    description: The GitHub token used to post comments on pull requests
+    description: 'The GitHub token used to post comments on pull requests'
     default: ${{ github.token }}
 
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
+  using: node20
+  main: dist/index.js

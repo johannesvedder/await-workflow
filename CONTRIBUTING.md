@@ -25,12 +25,13 @@ Run `./script/release`
 
 ---
 
-## Create a GitHub Action Using TypeScript (TEMPLATE REPOSITORY)
+# Create a GitHub Action Using TypeScript
 
 [![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
 ![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
 [![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
 [![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
+[![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 Use this template to bootstrap the creation of a TypeScript action. :rocket:
 
@@ -53,7 +54,7 @@ follow the below instructions:
 
 > [!IMPORTANT]
 >
-> Make sure to remove or update the [`CODEOWNERS`] file! For
+> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
 > details on how to use this file, see
 > [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
 
@@ -109,7 +110,7 @@ inputs, and outputs for your action.
 
 ## Update the Action Code
 
-The [`src/`](./src) directory is the heart of your action! This contains the
+The [`src/`](./src/) directory is the heart of your action! This contains the
 source code that will be run when your action is invoked. You can replace the
 contents of this directory with your own code.
 
@@ -150,8 +151,6 @@ So, what are you waiting for? Go ahead and start customizing your action!
    npm run all
    ```
 
-   > [!WARNING]
-   >
    > This step is important! It will run [`ncc`](https://github.com/vercel/ncc)
    > to build the final JavaScript action code with all dependencies included.
    > If you do not run this step, your action will not work correctly when it is
@@ -235,13 +234,14 @@ steps:
     run: echo "${{ steps.test-action.outputs.time }}"
 ```
 
-## Publishing a new release
+## Publishing a New Release
 
-This project includes a helper script designed to streamline the process of
-tagging and pushing new releases for GitHub Actions.
+This project includes a helper script, [`script/release`](./script/release)
+designed to streamline the process of tagging and pushing new releases for
+GitHub Actions.
 
 GitHub Actions allows users to select a specific version of the action to use,
-based on release tags. Our script simplifies this process by performing the
+based on release tags. This script simplifies this process by performing the
 following steps:
 
 1. **Retrieving the latest release tag:** The script starts by fetching the most
