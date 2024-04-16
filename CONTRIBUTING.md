@@ -11,7 +11,7 @@ npm update
 npm update --save
 ```
 
-#### Optimistic update:
+#### Optimistic update
 
 ```bash
 npm i -g npm-check-updates
@@ -25,7 +25,7 @@ Run `./script/release`
 
 ---
 
-# Create a GitHub Action Using TypeScript
+## Create a GitHub Action Using TypeScript
 
 [![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
 ![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
