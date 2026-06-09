@@ -19,7 +19,8 @@ inputs:
 
   branch:
     description:
-      'The branch to fetch the workflow runs (If not provided, considers all branches)'
+      'The branch to fetch the workflow runs (If not provided, considers all
+      branches)'
 
   retryIntervalSeconds:
     description: 'Retry interval in seconds'
@@ -44,5 +45,5 @@ inputs:
     default: ${{ github.token }}
 
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
