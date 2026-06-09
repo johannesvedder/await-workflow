@@ -7,6 +7,7 @@ async function startWorkflow(): Promise<void> {
     repository:
       core.getInput('repository') ||
       `${github.context.repo.owner}/${github.context.repo.repo}`,
+    branch: core.getInput('branch'),
     retryIntervalSeconds: Number(core.getInput('retryIntervalSeconds')),
     timeoutSeconds: Number(core.getInput('timeoutSeconds')),
     initialWaitSeconds: Number(core.getInput('initialWaitSeconds')),
@@ -34,7 +35,13 @@ async function startWorkflow(): Promise<void> {
       }
     )
 
-    const latestWorkflowRun = response.data.workflow_runs?.[0]
+    let workflow_runs = response.data.workflow_runs;
+
+    if (inputs.branch){
+      workflow_runs = workflow_runs?.filter(run => run.head_branch === inputs.branch);
+    }
+    
+    const latestWorkflowRun = workflow_runs?.[0]
     const totalCounts = response.data.total_count
 
     if (totalCounts === 0) {
@@ -44,6 +51,7 @@ async function startWorkflow(): Promise<void> {
 
     const latestRunStatus = latestWorkflowRun?.status
     const latestRunConclusion = latestWorkflowRun?.conclusion
+    const latestRunBranch = latestWorkflowRun?.head_branch
 
     if (latestRunStatus === 'completed') {
       if (
@@ -55,11 +63,11 @@ async function startWorkflow(): Promise<void> {
         )
         break
       } else if (latestRunConclusion === 'failure') {
-        core.setFailed('Latest run of the given workflow was a failure')
+        core.setFailed(`Latest run of the given workflow in branch ${latestRunBranch} was a failure`)
         process.exit(1)
       } else {
         core.setFailed(
-          `Latest run of the given workflow was not successful [${latestRunStatus}]`
+          `Latest run of the given workflow in branch ${latestRunBranch} was not successful [${latestRunStatus}]`
         )
         process.exit(1)
       }

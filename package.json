@@ -1,7 +1,7 @@
 {
   "name": "await-workflow",
   "description": "This GitHub Action allows you to wait for a specific workflow to complete before proceeding with the next steps in your workflow.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Johannes Vedder",
   "private": true,
   "repository": {

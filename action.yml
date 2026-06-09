@@ -17,6 +17,10 @@ inputs:
       'The repository in the format owner/repo to fetch the workflow runs
       (default is the current repository)'
 
+  branch:
+    description:
+      'The branch to fetch the workflow runs (If not provided, considers all branches)'
+
   retryIntervalSeconds:
     description: 'Retry interval in seconds'
     default: '60'

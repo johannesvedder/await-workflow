@@ -10,6 +10,7 @@ proceeding with the next steps in your workflow.
 - `repository`: The repository in the format 'owner/repository'. It is used to
   fetch the workflow runs. If not provided, it falls back to the current
   repository (default: `github.context.repo.owner/github.context.repo.repo`).
+- `branch`: The branch to fetch the workflow runs (If not provided, considers all branches.)
 - `retryIntervalSeconds`: The number of seconds to wait between each retry
   (default: 60).
 - `timeoutSeconds`: The maximum number of seconds to wait before timing out
