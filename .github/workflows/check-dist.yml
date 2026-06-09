@@ -28,11 +28,11 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         id: setup-node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
           cache: npm
@@ -50,8 +50,9 @@ jobs:
       - name: Compare Directories
         id: diff
         run: |
-          if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
+          if [ -n "$(git status --porcelain -- dist/)" ]; then
             echo "Detected uncommitted changes after build. See status below:"
+            git status --porcelain -- dist/
             git diff --ignore-space-at-eol --text dist/
             exit 1
           fi
@@ -61,7 +62,7 @@ jobs:
       - if: ${{ failure() && steps.diff.outcome == 'failure' }}
         name: Upload Artifact
         id: upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/

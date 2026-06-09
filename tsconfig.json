@@ -5,12 +5,12 @@
     "module": "NodeNext",
     "rootDir": "./src",
     "moduleResolution": "NodeNext",
-    "baseUrl": "./",
     "sourceMap": true,
     "outDir": "./dist",
     "noImplicitAny": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "strict": true,
     "skipLibCheck": true,
     "newLine": "lf"
