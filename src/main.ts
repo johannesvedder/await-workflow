@@ -35,12 +35,14 @@ async function startWorkflow(): Promise<void> {
       }
     )
 
-    let workflow_runs = response.data.workflow_runs;
+    let workflow_runs = response.data.workflow_runs
 
-    if (inputs.branch){
-      workflow_runs = workflow_runs?.filter(run => run.head_branch === inputs.branch);
+    if (inputs.branch) {
+      workflow_runs = workflow_runs?.filter(
+        workflowRun => workflowRun.head_branch === inputs.branch
+      )
     }
-    
+
     const latestWorkflowRun = workflow_runs?.[0]
     const totalCounts = response.data.total_count
 
@@ -63,7 +65,9 @@ async function startWorkflow(): Promise<void> {
         )
         break
       } else if (latestRunConclusion === 'failure') {
-        core.setFailed(`Latest run of the given workflow in branch ${latestRunBranch} was a failure`)
+        core.setFailed(
+          `Latest run of the given workflow in branch ${latestRunBranch} was a failure`
+        )
         process.exit(1)
       } else {
         core.setFailed(
